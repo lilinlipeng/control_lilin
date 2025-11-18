@@ -39,7 +39,7 @@ CREATE TABLE `appuser` (
 
 /*Data for the table `appuser` */
 
-insert  into `appuser`(`Id`,`CreationTime`,`UserName`,`Email`,`Name`,`Birth`,`PhoneNumber`,`RoleType`,`ImageUrls`,`Password`,`Gender`,`OpenId`) values (1,'2025-10-08 12:08:44','admin','1317425625@qq.com','管理员','2025-10-21 00:00:00','15211323826',1,'http://localhost:7245/72091794/mmexport1549447640824.jpg','MD521232f297a57a5a743894a0e4a801fc3','女',NULL),(2,'2025-10-11 15:37:57','lilin','1317425625@qq.com','李林','2025-10-15 13:09:13','15211323825',2,'http://localhost:7245/799032297/OtMWDqcrWcei06c2e2efa1f14a78335e5c3923334a2e.png','MD5e10adc3949ba59abbe56e057f20f883e','男','wxb63833d6dc3c6549'),(4,'2025-10-28 16:13:39','lilin2','lilinlipeng@sohu.com','李林','2025-10-20 00:00:00','15211323826',2,'http://localhost:7245/318013635/39.png','MD51e53b3189de058f873604013cdb18415','男',NULL);
+insert  into `appuser`(`Id`,`CreationTime`,`UserName`,`Email`,`Name`,`Birth`,`PhoneNumber`,`RoleType`,`ImageUrls`,`Password`,`Gender`,`OpenId`) values (1,'2025-10-08 12:08:44','admin','1317425625@qq.com','管理员','2025-10-21 00:00:00','15211323826',1,'http://localhost:7245/72091794/mmexport1549447640824.jpg','MD521232f297a57a5a743894a0e4a801fc3','女',NULL),(2,'2025-10-11 15:37:57','lilin','1317425625@qq.com','李林','2025-10-15 13:09:13','15211323825',2,'http://localhost:7245/799032297/OtMWDqcrWcei06c2e2efa1f14a78335e5c3923334a2e.png','MD5e10adc3949ba59abbe56e057f20f883e','男',null),(4,'2025-10-28 16:13:39','lilin2','lilinlipeng@sohu.com','李林','2025-10-20 00:00:00','15211323826',2,'http://localhost:7245/318013635/39.png','MD51e53b3189de058f873604013cdb18415','男',NULL);
 
 insert into `appuser`(`Id`, `CreationTime`, `UserName`, `Email`, `Name`, `Birth`, `PhoneNumber`, `RoleType`,
                       `ImageUrls`, `Password`, `Gender`, `OpenId`)
@@ -433,4 +433,5 @@ insert  into `sportunit`(`Id`,`CreationTime`,`SportId`,`UnitName`,`UnitValue`,`C
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
 

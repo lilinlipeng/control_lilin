@@ -1,0 +1,418 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : xt
+ Source Server Type    : MySQL
+ Source Server Version : 50717
+ Source Host           : localhost:3306
+ Source Schema         : healthcontrol
+
+ Target Server Type    : MySQL
+ Target Server Version : 50717
+ File Encoding         : 65001
+
+ Date: 17/09/2025 14:15:59
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for appuser
+-- ----------------------------
+DROP TABLE IF EXISTS `appuser`;
+CREATE TABLE `appuser`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户主键',
+  `CreationTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `UserName` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '账号',
+  `Email` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '邮箱',
+  `Name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '名称',
+  `Birth` datetime(0) NULL DEFAULT NULL COMMENT '出生年月',
+  `PhoneNumber` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '手机号码',
+  `RoleType` int(11) NULL DEFAULT NULL COMMENT '角色',
+  `ImageUrls` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '头像',
+  `Password` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '密码',
+  PRIMARY KEY (`Id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of appuser
+-- ----------------------------
+INSERT INTO `appuser` VALUES (1, '2025-09-16 21:11:19', 'admin', NULL, '管理员', NULL, NULL, 1, NULL, 'MD521232f297a57a5a743894a0e4a801fc3');
+
+-- ----------------------------
+-- Table structure for collectrecord
+-- ----------------------------
+DROP TABLE IF EXISTS `collectrecord`;
+CREATE TABLE `collectrecord`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '收藏记录主键',
+  `CreationTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `CollectUserId` int(11) NULL DEFAULT NULL COMMENT '收藏人',
+  `CollectType` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '收藏类型',
+  `RelativeId` int(11) NULL DEFAULT NULL COMMENT '关联资源Id',
+  PRIMARY KEY (`Id`) USING BTREE,
+  INDEX `CollectUserId`(`CollectUserId`) USING BTREE,
+  CONSTRAINT `collectrecord_ibfk_1` FOREIGN KEY (`CollectUserId`) REFERENCES `appuser` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '收藏记录表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for dietrecord
+-- ----------------------------
+DROP TABLE IF EXISTS `dietrecord`;
+CREATE TABLE `dietrecord`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '饮食记录主键',
+  `CreationTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `FoodId` int(11) NULL DEFAULT NULL COMMENT '记录食物',
+  `RecordUserId` int(11) NULL DEFAULT NULL COMMENT '记录人',
+  `FoodUnitId` int(11) NULL DEFAULT NULL COMMENT '食物单位',
+  `RecordTime` datetime(0) NULL DEFAULT NULL COMMENT '记录时间',
+  `RecordValue` int(11) NULL DEFAULT NULL COMMENT '记录值',
+  PRIMARY KEY (`Id`) USING BTREE,
+  INDEX `RecordUserId`(`RecordUserId`) USING BTREE,
+  INDEX `FoodId`(`FoodId`) USING BTREE,
+  INDEX `FoodUnitId`(`FoodUnitId`) USING BTREE,
+  CONSTRAINT `dietrecord_ibfk_1` FOREIGN KEY (`RecordUserId`) REFERENCES `appuser` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT,
+  CONSTRAINT `dietrecord_ibfk_2` FOREIGN KEY (`FoodId`) REFERENCES `food` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT,
+  CONSTRAINT `dietrecord_ibfk_3` FOREIGN KEY (`FoodUnitId`) REFERENCES `foodunit` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '饮食记录表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for food
+-- ----------------------------
+DROP TABLE IF EXISTS `food`;
+CREATE TABLE `food`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '食物主键',
+  `CreationTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `Name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '食物名称',
+  `Cover` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '封面',
+  `FoodTypeId` int(11) NULL DEFAULT NULL COMMENT '食物类型',
+  `Calories` double(20, 8) NULL DEFAULT NULL COMMENT '热量',
+  `Protein` double(20, 8) NULL DEFAULT NULL COMMENT '蛋白质',
+  `Carbohydrates` double(20, 8) NULL DEFAULT NULL COMMENT '糖水化合物',
+  `Fat` double(20, 8) NULL DEFAULT NULL COMMENT '脂肪',
+  PRIMARY KEY (`Id`) USING BTREE,
+  INDEX `FoodTypeId`(`FoodTypeId`) USING BTREE,
+  CONSTRAINT `food_ibfk_1` FOREIGN KEY (`FoodTypeId`) REFERENCES `foodtype` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '食物表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for foodtype
+-- ----------------------------
+DROP TABLE IF EXISTS `foodtype`;
+CREATE TABLE `foodtype`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '食物类型主键',
+  `CreationTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `Name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '分类名称',
+  `Sort` int(11) NULL DEFAULT NULL COMMENT '显示顺序',
+  PRIMARY KEY (`Id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '食物类型表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for foodunit
+-- ----------------------------
+DROP TABLE IF EXISTS `foodunit`;
+CREATE TABLE `foodunit`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '食物单位主键',
+  `CreationTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `FoodId` int(11) NULL DEFAULT NULL COMMENT '食物',
+  `UnitName` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '单位名称',
+  `UnitValue` int(11) NULL DEFAULT NULL COMMENT '单位值',
+  PRIMARY KEY (`Id`) USING BTREE,
+  INDEX `FoodId`(`FoodId`) USING BTREE,
+  CONSTRAINT `foodunit_ibfk_1` FOREIGN KEY (`FoodId`) REFERENCES `food` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '食物单位表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for healtharticle
+-- ----------------------------
+DROP TABLE IF EXISTS `healtharticle`;
+CREATE TABLE `healtharticle`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '健康知识主键',
+  `CreationTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `Title` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '标题',
+  `HealthArticleTypeId` int(11) NULL DEFAULT NULL COMMENT '分类',
+  `Cover` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '封面',
+  `PublishUserId` int(11) NULL DEFAULT NULL COMMENT '发布人',
+  `Content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '内容',
+  `ViewCount` int(11) NULL DEFAULT NULL COMMENT '浏览量',
+  `AuditStatus` int(11) NULL DEFAULT NULL COMMENT '审核状态枚举(1:待审核,2:审核通过,3:审核失败)',
+  `AuditTime` datetime(0) NULL DEFAULT NULL COMMENT '审核时间',
+  `AuditUserId` int(11) NULL DEFAULT NULL COMMENT '审核人',
+  PRIMARY KEY (`Id`) USING BTREE,
+  INDEX `PublishUserId`(`PublishUserId`) USING BTREE,
+  INDEX `AuditUserId`(`AuditUserId`) USING BTREE,
+  INDEX `HealthArticleTypeId`(`HealthArticleTypeId`) USING BTREE,
+  CONSTRAINT `healtharticle_ibfk_1` FOREIGN KEY (`PublishUserId`) REFERENCES `appuser` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT,
+  CONSTRAINT `healtharticle_ibfk_2` FOREIGN KEY (`AuditUserId`) REFERENCES `appuser` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT,
+  CONSTRAINT `healtharticle_ibfk_3` FOREIGN KEY (`HealthArticleTypeId`) REFERENCES `healtharticletype` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '健康知识表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for healtharticletype
+-- ----------------------------
+DROP TABLE IF EXISTS `healtharticletype`;
+CREATE TABLE `healtharticletype`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '健康知识分类主键',
+  `CreationTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `Name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '分类名称',
+  `Sort` int(11) NULL DEFAULT NULL COMMENT '显示顺序',
+  PRIMARY KEY (`Id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '健康知识分类表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for healthindicator
+-- ----------------------------
+DROP TABLE IF EXISTS `healthindicator`;
+CREATE TABLE `healthindicator`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '健康指标主键',
+  `CreationTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `Name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '指标名称',
+  `BelongUserId` int(11) NULL DEFAULT NULL COMMENT '所属人',
+  `Content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '描述内容',
+  `Cover` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '封面',
+  `IsComm` tinyint(1) NULL DEFAULT NULL COMMENT '是否公用',
+  `Threshold` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '阈值',
+  `HealthIndicatorTypeId` int(11) NULL DEFAULT NULL COMMENT '指标归类',
+  PRIMARY KEY (`Id`) USING BTREE,
+  INDEX `HealthIndicatorTypeId`(`HealthIndicatorTypeId`) USING BTREE,
+  INDEX `BelongUserId`(`BelongUserId`) USING BTREE,
+  CONSTRAINT `healthindicator_ibfk_1` FOREIGN KEY (`HealthIndicatorTypeId`) REFERENCES `healthindicatortype` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT,
+  CONSTRAINT `healthindicator_ibfk_2` FOREIGN KEY (`BelongUserId`) REFERENCES `appuser` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 93 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '健康指标表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for healthindicatorrecord
+-- ----------------------------
+DROP TABLE IF EXISTS `healthindicatorrecord`;
+CREATE TABLE `healthindicatorrecord`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '健康指标记录主键',
+  `CreationTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `HealthIndicatorTypeId` int(11) NULL DEFAULT NULL COMMENT '指标分类',
+  `HealthIndicatorId` int(11) NULL DEFAULT NULL COMMENT '健康指标',
+  `RecordUserId` int(11) NULL DEFAULT NULL COMMENT '记录人',
+  `RecordTime` datetime(0) NULL DEFAULT NULL COMMENT '记录时间',
+  `RecordValue` double(20, 8) NULL DEFAULT NULL COMMENT '记录值',
+  `IsAbnormity` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '是否异常',
+  PRIMARY KEY (`Id`) USING BTREE,
+  INDEX `HealthIndicatorId`(`HealthIndicatorId`) USING BTREE,
+  INDEX `RecordUserId`(`RecordUserId`) USING BTREE,
+  INDEX `HealthIndicatorTypeId`(`HealthIndicatorTypeId`) USING BTREE,
+  CONSTRAINT `healthindicatorrecord_ibfk_1` FOREIGN KEY (`HealthIndicatorId`) REFERENCES `healthindicator` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT,
+  CONSTRAINT `healthindicatorrecord_ibfk_2` FOREIGN KEY (`RecordUserId`) REFERENCES `appuser` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT,
+  CONSTRAINT `healthindicatorrecord_ibfk_3` FOREIGN KEY (`HealthIndicatorTypeId`) REFERENCES `healthindicatortype` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '健康指标记录表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for healthindicatortype
+-- ----------------------------
+DROP TABLE IF EXISTS `healthindicatortype`;
+CREATE TABLE `healthindicatortype`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '健康指标分类主键',
+  `CreationTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `Name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '分类名称',
+  `BelongUserId` int(11) NULL DEFAULT NULL COMMENT '所属人',
+  `IsComm` tinyint(1) NULL DEFAULT NULL COMMENT '是否公用',
+  PRIMARY KEY (`Id`) USING BTREE,
+  INDEX `BelongUserId`(`BelongUserId`) USING BTREE,
+  CONSTRAINT `healthindicatortype_ibfk_1` FOREIGN KEY (`BelongUserId`) REFERENCES `appuser` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '健康指标分类表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of healthindicatortype
+-- ----------------------------
+INSERT INTO `healthindicatortype` VALUES (1, '2025-09-17 14:06:19', '血糖', 1, 1);
+INSERT INTO `healthindicatortype` VALUES (2, '2025-09-17 14:06:40', '基础指标', 1, 1);
+INSERT INTO `healthindicatortype` VALUES (3, '2025-09-17 14:14:12', '血压', 1, 0);
+INSERT INTO `healthindicatortype` VALUES (4, '2025-09-17 14:14:16', '血脂', 1, 0);
+INSERT INTO `healthindicatortype` VALUES (5, '2025-09-17 14:15:00', '心率', 1, 1);
+INSERT INTO `healthindicatortype` VALUES (6, '2025-09-17 14:15:01', '肝功能', 1, 1);
+INSERT INTO `healthindicatortype` VALUES (7, '2025-09-17 14:15:02', '肾功能', 1, 1);
+INSERT INTO `healthindicatortype` VALUES (8, '2025-09-17 14:15:03', '血常规', 1, 1);
+INSERT INTO `healthindicatortype` VALUES (9, '2025-09-17 14:15:04', '呼吸系统', 1, 1);
+INSERT INTO `healthindicatortype` VALUES (10, '2025-09-17 14:15:05', '内分泌', 1, 1);
+
+-- ----------------------------
+-- Records of healthindicator
+-- ----------------------------
+-- 血糖指标
+INSERT INTO `healthindicator` VALUES (1, '2025-09-17 14:15:10', '空腹血糖', 1, '测量空腹状态下的血糖浓度，正常范围为3.9-6.1mmol/L', NULL, 1, '3.9-6.1', 1);
+INSERT INTO `healthindicator` VALUES (2, '2025-09-17 14:15:11', '餐后2小时血糖', 1, '餐后2小时血糖浓度，正常应小于7.8mmol/L', NULL, 1, '<7.8', 1);
+INSERT INTO `healthindicator` VALUES (3, '2025-09-17 14:15:12', '糖化血红蛋白', 1, '反映近2-3个月平均血糖水平，正常范围4.0-6.0%', NULL, 1, '4.0-6.0', 1);
+
+-- 基础指标
+INSERT INTO `healthindicator` VALUES (10, '2025-09-17 14:15:20', '身高', 1, '身体的高度，单位厘米', NULL, 1, '>0', 2);
+INSERT INTO `healthindicator` VALUES (11, '2025-09-17 14:15:21', '体重', 1, '身体的重量，单位千克', NULL, 1, '>0', 2);
+INSERT INTO `healthindicator` VALUES (12, '2025-09-17 14:15:22', '体温', 1, '正常体温范围36.0-37.2℃', NULL, 1, '36.0-37.2', 2);
+INSERT INTO `healthindicator` VALUES (13, '2025-09-17 14:15:23', 'BMI指数', 1, '身体质量指数，正常范围18.5-23.9', NULL, 1, '18.5-23.9', 2);
+
+-- 血压指标
+INSERT INTO `healthindicator` VALUES (20, '2025-09-17 14:15:30', '收缩压', 1, '心脏收缩时的血压，正常范围90-140mmHg', NULL, 1, '90-140', 3);
+INSERT INTO `healthindicator` VALUES (21, '2025-09-17 14:15:31', '舒张压', 1, '心脏舒张时的血压，正常范围60-90mmHg', NULL, 1, '60-90', 3);
+
+-- 血脂指标
+INSERT INTO `healthindicator` VALUES (30, '2025-09-17 14:15:40', '总胆固醇', 1, '血液中胆固醇总量，正常范围3.1-5.2mmol/L', NULL, 1, '3.1-5.2', 4);
+INSERT INTO `healthindicator` VALUES (31, '2025-09-17 14:15:41', '甘油三酯', 1, '血液中甘油三酯含量，正常范围0.45-1.69mmol/L', NULL, 1, '0.45-1.69', 4);
+INSERT INTO `healthindicator` VALUES (32, '2025-09-17 14:15:42', '低密度脂蛋白', 1, '坏胆固醇，正常范围<3.4mmol/L', NULL, 1, '<3.4', 4);
+INSERT INTO `healthindicator` VALUES (33, '2025-09-17 14:15:43', '高密度脂蛋白', 1, '好胆固醇，正常范围>1.04mmol/L', NULL, 1, '>1.04', 4);
+
+-- 心率指标
+INSERT INTO `healthindicator` VALUES (40, '2025-09-17 14:15:50', '静息心率', 1, '安静状态下的心率，正常范围60-100次/分', NULL, 1, '60-100', 5);
+INSERT INTO `healthindicator` VALUES (41, '2025-09-17 14:15:51', '运动心率', 1, '运动时的心率，一般不超过220-年龄', NULL, 1, '根据年龄', 5);
+
+-- 肝功能指标
+INSERT INTO `healthindicator` VALUES (50, '2025-09-17 14:16:00', '谷丙转氨酶', 1, 'ALT，正常范围7-40U/L', NULL, 1, '7-40', 6);
+INSERT INTO `healthindicator` VALUES (51, '2025-09-17 14:16:01', '谷草转氨酶', 1, 'AST，正常范围13-35U/L', NULL, 1, '13-35', 6);
+INSERT INTO `healthindicator` VALUES (52, '2025-09-17 14:16:02', '总胆红素', 1, '正常范围3.4-17.1μmol/L', NULL, 1, '3.4-17.1', 6);
+
+-- 肾功能指标
+INSERT INTO `healthindicator` VALUES (60, '2025-09-17 14:16:10', '血肌酐', 1, '正常范围男性53-106μmol/L，女性44-97μmol/L', NULL, 1, '44-106', 7);
+INSERT INTO `healthindicator` VALUES (61, '2025-09-17 14:16:11', '血尿素氮', 1, '正常范围2.9-8.2mmol/L', NULL, 1, '2.9-8.2', 7);
+INSERT INTO `healthindicator` VALUES (62, '2025-09-17 14:16:12', '尿酸', 1, '正常范围男性150-416μmol/L，女性89-357μmol/L', NULL, 1, '89-416', 7);
+
+-- 血常规指标
+INSERT INTO `healthindicator` VALUES (70, '2025-09-17 14:16:20', '白细胞计数', 1, '正常范围3.5-9.5×10^9/L', NULL, 1, '3.5-9.5', 8);
+INSERT INTO `healthindicator` VALUES (71, '2025-09-17 14:16:21', '红细胞计数', 1, '正常范围男性4.3-5.8×10^12/L，女性3.8-5.1×10^12/L', NULL, 1, '3.8-5.8', 8);
+INSERT INTO `healthindicator` VALUES (72, '2025-09-17 14:16:22', '血红蛋白', 1, '正常范围男性130-175g/L，女性115-150g/L', NULL, 1, '115-175', 8);
+INSERT INTO `healthindicator` VALUES (73, '2025-09-17 14:16:23', '血小板计数', 1, '正常范围125-350×10^9/L', NULL, 1, '125-350', 8);
+
+-- 呼吸系统指标
+INSERT INTO `healthindicator` VALUES (80, '2025-09-17 14:16:30', '肺活量', 1, '正常范围因年龄性别而异，一般2500-4000ml', NULL, 1, '2500-4000', 9);
+INSERT INTO `healthindicator` VALUES (81, '2025-09-17 14:16:31', '血氧饱和度', 1, '正常范围95-100%', NULL, 1, '95-100', 9);
+
+-- 内分泌指标
+INSERT INTO `healthindicator` VALUES (90, '2025-09-17 14:16:40', '促甲状腺激素', 1, 'TSH，正常范围0.27-4.2mIU/L', NULL, 1, '0.27-4.2', 10);
+INSERT INTO `healthindicator` VALUES (91, '2025-09-17 14:16:41', '游离甲状腺素', 1, 'FT4，正常范围12-22pmol/L', NULL, 1, '12-22', 10);
+INSERT INTO `healthindicator` VALUES (92, '2025-09-17 14:16:42', '游离三碘甲状腺原氨酸', 1, 'FT3，正常范围3.1-6.8pmol/L', NULL, 1, '3.1-6.8', 10);
+
+-- ----------------------------
+-- Table structure for healthnotice
+-- ----------------------------
+DROP TABLE IF EXISTS `healthnotice`;
+CREATE TABLE `healthnotice`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '健康提醒主键',
+  `CreationTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `PublishUserId` int(11) NULL DEFAULT NULL COMMENT '提醒人',
+  `Content` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '提醒内容',
+  `Title` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '提醒标题',
+  `Num` int(11) NULL DEFAULT NULL COMMENT '提醒次数',
+  `RemindTime` datetime(0) NULL DEFAULT NULL COMMENT '提醒时间',
+  `RemindType` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '提醒方式',
+  `IsRemind` tinyint(1) NULL DEFAULT NULL COMMENT '是否提醒',
+  PRIMARY KEY (`Id`) USING BTREE,
+  INDEX `PublishUserId`(`PublishUserId`) USING BTREE,
+  CONSTRAINT `healthnotice_ibfk_1` FOREIGN KEY (`PublishUserId`) REFERENCES `appuser` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '健康提醒表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for likerecord
+-- ----------------------------
+DROP TABLE IF EXISTS `likerecord`;
+CREATE TABLE `likerecord`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '点赞记录主键',
+  `CreationTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `LikeUserId` int(11) NULL DEFAULT NULL COMMENT '点赞人',
+  `LikeType` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '点赞类型',
+  `RelativeId` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '关联Id',
+  PRIMARY KEY (`Id`) USING BTREE,
+  INDEX `LikeUserId`(`LikeUserId`) USING BTREE,
+  CONSTRAINT `likerecord_ibfk_1` FOREIGN KEY (`LikeUserId`) REFERENCES `appuser` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '点赞记录表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for messagenotice
+-- ----------------------------
+DROP TABLE IF EXISTS `messagenotice`;
+CREATE TABLE `messagenotice`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '消息通知主键',
+  `CreationTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `RelationNo` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '关联单号',
+  `UserId` int(11) NULL DEFAULT NULL COMMENT '接受人',
+  `ActualSendTime` datetime(0) NULL DEFAULT NULL COMMENT '实际发送时间',
+  `Type` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '类型',
+  `TargetKey` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '目标',
+  `Content` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '通知内容',
+  `IsSuccess` tinyint(1) NULL DEFAULT NULL COMMENT '是否成功',
+  `IsSend` tinyint(1) NULL DEFAULT NULL COMMENT '是否发送',
+  `Title` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '通知标题',
+  `PlanSendTime` datetime(0) NULL DEFAULT NULL COMMENT '计划发送时间',
+  `ResultMsg` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '发送结果',
+  PRIMARY KEY (`Id`) USING BTREE,
+  INDEX `UserId`(`UserId`) USING BTREE,
+  CONSTRAINT `messagenotice_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `appuser` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '消息通知表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for recipe
+-- ----------------------------
+DROP TABLE IF EXISTS `recipe`;
+CREATE TABLE `recipe`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '食谱主键',
+  `CreationTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `Title` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '标题',
+  `Cover` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '封面',
+  `ImageUrls` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '详细图',
+  `Content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '内容',
+  `ViewCount` int(11) NULL DEFAULT NULL COMMENT '浏览量',
+  `VideoUrl` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '视频路径',
+  `AuditUserId` int(11) NULL DEFAULT NULL COMMENT '审核人',
+  `PublishUserId` int(11) NULL DEFAULT NULL COMMENT '发布人',
+  `AuditTime` datetime(0) NULL DEFAULT NULL COMMENT '审核时间',
+  `AuditStatus` int(11) NULL DEFAULT NULL COMMENT '审核状态枚举(1:待审核,2:审核通过,3:审核失败)',
+  PRIMARY KEY (`Id`) USING BTREE,
+  INDEX `PublishUserId`(`PublishUserId`) USING BTREE,
+  INDEX `AuditUserId`(`AuditUserId`) USING BTREE,
+  CONSTRAINT `recipe_ibfk_1` FOREIGN KEY (`PublishUserId`) REFERENCES `appuser` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT,
+  CONSTRAINT `recipe_ibfk_2` FOREIGN KEY (`AuditUserId`) REFERENCES `appuser` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '食谱表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for sport
+-- ----------------------------
+DROP TABLE IF EXISTS `sport`;
+CREATE TABLE `sport`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '运动参考主键',
+  `CreationTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `Name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '运动名称',
+  `Cover` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '封面',
+  `Content` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '介绍',
+  PRIMARY KEY (`Id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '运动参考表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for sportrecord
+-- ----------------------------
+DROP TABLE IF EXISTS `sportrecord`;
+CREATE TABLE `sportrecord`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '运动记录主键',
+  `CreationTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `SportId` int(11) NULL DEFAULT NULL COMMENT '运动',
+  `SportUnitId` int(11) NULL DEFAULT NULL COMMENT '运动单位',
+  `RecordUserId` int(11) NULL DEFAULT NULL COMMENT '记录人',
+  `RecordTime` int(11) NULL DEFAULT NULL COMMENT '记录时间',
+  `RecordValue` int(11) NULL DEFAULT NULL COMMENT '记录值',
+  PRIMARY KEY (`Id`) USING BTREE,
+  INDEX `RecordUserId`(`RecordUserId`) USING BTREE,
+  INDEX `SportId`(`SportId`) USING BTREE,
+  INDEX `SportUnitId`(`SportUnitId`) USING BTREE,
+  CONSTRAINT `sportrecord_ibfk_1` FOREIGN KEY (`RecordUserId`) REFERENCES `appuser` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT,
+  CONSTRAINT `sportrecord_ibfk_2` FOREIGN KEY (`SportId`) REFERENCES `sport` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT,
+  CONSTRAINT `sportrecord_ibfk_3` FOREIGN KEY (`SportUnitId`) REFERENCES `sportunit` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '运动记录表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for sportunit
+-- ----------------------------
+DROP TABLE IF EXISTS `sportunit`;
+CREATE TABLE `sportunit`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '运动单位主键',
+  `CreationTime` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `SportId` int(11) NULL DEFAULT NULL COMMENT '运动',
+  `UnitName` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '单位名称',
+  `UnitValue` double(20, 8) NULL DEFAULT NULL COMMENT '单位值',
+  `Calories` double(20, 8) NULL DEFAULT NULL COMMENT '热量',
+  PRIMARY KEY (`Id`) USING BTREE,
+  INDEX `SportId`(`SportId`) USING BTREE,
+  CONSTRAINT `sportunit_ibfk_1` FOREIGN KEY (`SportId`) REFERENCES `sport` (`Id`) ON DELETE SET NULL ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '运动单位表' ROW_FORMAT = Dynamic;
+
+SET FOREIGN_KEY_CHECKS = 1;

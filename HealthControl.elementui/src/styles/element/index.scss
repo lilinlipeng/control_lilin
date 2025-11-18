@@ -1,0 +1,40 @@
+$--colors: (
+  'primary': (
+    'base': #12B886,      // mint/teal for health, calm and trustworthy
+    'light-1': #3DC79E,
+    'light-2': #66D5B6,
+    'light-3': #90E3CE,
+    'light-4': #BAF1E5,
+    'light-5': #E6FFFA,
+    'dark-1': #10A57A,
+    'dark-2': #0E926D,
+  ),
+  'success': (
+    'base': #67C23A,
+    'light-1': #85CE61,
+    'light-2': #A4DA89,
+    'light-3': #C2E7B0,
+    'light-4': #E1F3D8,
+    'light-5': #F5FAEF,
+    'dark-1': #5DAF34,
+    'dark-2': #529B2E,
+  ),
+  'warning': (
+    'base': #FAAD14,
+  ),
+  'danger': (
+    'base': #F56C6C,
+  ),
+  'error': (
+    'base': #E03131,
+  ),
+  'info': (
+    'base': #409EFF,
+  ),
+);
+/* just override what you need */
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+    $colors: $--colors
+);
+
+@use "element-plus/theme-chalk/src/index.scss" as *;
